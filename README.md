@@ -1,1 +1,13 @@
 # GHG-emission-analysis
+
+## Objective
+Analyze global greenhouse gas emissions using the OWID dataset.
+
+## Progress
+### Week 1
+- Data loading
+- Data profiling
+- Missing value analysis
+- Global CO₂ trend analysis
+- Top emitter comparison
+- GHG composition analysis
