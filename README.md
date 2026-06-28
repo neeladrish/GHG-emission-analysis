@@ -11,3 +11,10 @@ Analyze global greenhouse gas emissions using the OWID dataset.
 - Global CO₂ trend analysis
 - Top emitter comparison
 - GHG composition analysis
+### Week 2
+- Time-Based Features
+- Lag Features
+- Per-Capita and Intensity Features
+- Growth Rate Features
+- Final Feature Dataset
+- 
