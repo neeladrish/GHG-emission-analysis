@@ -17,4 +17,10 @@ Analyze global greenhouse gas emissions using the OWID dataset.
 - Per-Capita and Intensity Features
 - Growth Rate Features
 - Final Feature Dataset
-- 
+### Week 3
+- Problem Framing
+- Train-Test Split
+- Naive Baseline Model
+- Linear Regression
+- Random Forest Regressor
+- Model 
