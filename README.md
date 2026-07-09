@@ -175,6 +175,38 @@ The results showed that no single model performs best for every country. Model e
 
 
 ---
+# 🚀 How to Run the Project
+
+Clone the repository:
+
+```bash
+git clone https://github.com/neeladrish/GHG-emission-analysis.git
+```
+
+Move into the project directory:
+
+```bash
+cd GHG-emission-analysis
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run notebooks in order:
+
+```
+├── WEEK_1_Data_aquisition_exploration_understanding
+├── WEEK_2_Feature_Engineering
+├── WEEK_3_Baseline_ML_Model_Regression
+├── WEEK_4_Time_Series_Forecasting_with_ETS(A,Ad,N)_Holts_Damped_Trend
+```
+
+
+
+---
 
 # 📊 Interactive Streamlit Dashboard
 
@@ -191,10 +223,21 @@ The dashboard includes:
 
 ## Running the Dashboard
 
+Move into the project directory:
+
+```bash
+cd GHG-emission-analysis
+```
+
 Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+To Run:
+
+```bash
+streamlit run app.py
 ```
 
 ---
