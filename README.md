@@ -176,18 +176,46 @@ The results showed that no single model performs best for every country. Model e
 
 ---
 
+# 📊 Interactive Streamlit Dashboard
+
+An interactive dashboard was developed using Streamlit to visualize emission trends, forecasts, and model results.
+
+The dashboard includes:
+
+- Project overview with key metrics
+- Multi-country historical emission comparison
+- Individual country emission profiles
+- ETS(A,Ad,N) forecasts until 2043
+- Machine learning vs time-series model comparison
+
+
+## Running the Dashboard
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+
+---
+
 # 📁 Repository Structure
 
 ```
 GHG-Emission-Analysis
 │
-├── data
+├── data/
+│   ├── ghg_features.csv
+│   ├── model_data.csv
+│   ├── comparison_table.csv
+│   ├── ets_forecasts.csv
+│   └── final_comparison.csv
 │
 ├── WEEK_1_Data_aquisition_exploration_understanding
 ├── WEEK_2_Feature_Engineering
 ├── WEEK_3_Baseline_ML_Model_Regression
 ├── WEEK_4_Time_Series_Forecasting_with_ETS(A,Ad,N)_Holts_Damped_Trend
 │
+├── app.py
 ├── requirements.txt
 │
 └── README.md
