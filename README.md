@@ -195,12 +195,11 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
 
 ---
 
 # 📁 Repository Structure
-
-```
 GHG-Emission-Analysis
 │
 ├── data/
@@ -219,7 +218,7 @@ GHG-Emission-Analysis
 ├── requirements.txt
 │
 └── README.md
-```
+
 
 
 ---
