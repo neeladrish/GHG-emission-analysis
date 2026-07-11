@@ -217,6 +217,7 @@ Run notebooks in order:
 ├── WEEK_2_Feature_Engineering
 ├── WEEK_3_Baseline_ML_Model_Regression
 ├── WEEK_4_Time_Series_Forecasting_with_ETS(A,Ad,N)_Holts_Damped_Trend
+├── WEEK_5_Scenario_Analysis
 ```
 
 
