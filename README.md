@@ -153,6 +153,19 @@ Notebook:
 
 ---
 
+## 5. Scenario Analysis
+Performed:
+
+- Scenario Design
+- Scenario Calculation
+- Scenario Visualisations
+- Impact Summary
+
+Notebook:
+
+``
+
+
 # 📈 Model Evaluation
 
 Models compared:
