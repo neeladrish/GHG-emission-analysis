@@ -262,6 +262,10 @@ streamlit run app.py
 GHG-Emission-Analysis
 │
 ├── data/
+|   ├── scenario_projections.csv
+|   ├── scenario_impact_summary.csv
+|   ├── owid-co2-data.csv
+|   ├── filtered_dataset.csv
 │   ├── ghg_features.csv
 │   ├── model_data.csv
 │   ├── comparison_table.csv
