@@ -37,16 +37,26 @@ def load_data():
         "data/model_data.csv"
     )
 
+    scenario_projection = pd.read_csv(
+    "data/scenario_projections.csv"
+)
+
+    scenario_summary = pd.read_csv(
+    "data/scenario_impact_summary.csv"
+)
+
 
     return (
-        ghg_data,
-        model_results,
-        ets_forecast,
-        model_data
-    )
+    ghg_data,
+    model_results,
+    ets_forecast,
+    model_data,
+    scenario_projection,
+    scenario_summary
+)
 
 
-ghg_data, model_results, ets_forecast, model_data = load_data()
+ghg_data, model_results, ets_forecast, model_data, scenario_projection, scenario_summary = load_data()
 
 
 # ===============================
@@ -61,11 +71,12 @@ st.sidebar.title(
 page = st.sidebar.radio(
     "Select Page",
     [
-        "Overview",
-        "Historical Trends",
-        "Country Profile",
-        "Forecast",
-        "Model Comparison"
+    "Overview",
+    "Historical Trends",
+    "Country Profile",
+    "Forecast",
+    "Scenario Analysis",
+    "Model Comparison"
     ]
 )
 
@@ -489,7 +500,215 @@ elif page == "Forecast":
         country_forecast
     )
 
-    # ===============================
+
+# ===============================
+# SCENARIO ANALYSIS PAGE
+# ===============================
+
+elif page == "Scenario Analysis":
+
+    st.title("🌍 Scenario Analysis")
+
+    st.markdown("""
+This section compares three future CO₂ emission pathways generated from the ETS(A,Ad,N) baseline forecast.
+
+### Scenarios
+- 🔵 Business As Usual (BAU)
+- 🟠 Moderate Mitigation (2% annual reduction)
+- 🟢 Aggressive Mitigation (5% annual reduction)
+
+The mitigation scenarios apply compounded annual reductions beginning in 2025.
+""")
+
+    # ---------------------------------------
+    # Country Selection
+    # ---------------------------------------
+
+    selected_country = st.selectbox(
+        "Select Country",
+        sorted(scenario_projection["Country"].unique())
+    )
+
+    # ---------------------------------------
+    # Filter Data
+    # ---------------------------------------
+
+    country_projection = (
+        scenario_projection[
+            scenario_projection["Country"] == selected_country
+        ]
+        .sort_values(["Scenario", "Year"])
+    )
+
+    country_summary = (
+        scenario_summary[
+            scenario_summary["Country"] == selected_country
+        ]
+    )
+
+    # ---------------------------------------
+    # Scenario Line Chart
+    # ---------------------------------------
+
+    st.subheader("Scenario Projection")
+
+    fig = px.line(
+
+        country_projection,
+
+        x="Year",
+
+        y="CO2_Projected",
+
+        color="Scenario",
+
+        markers=True,
+
+        color_discrete_map={
+            "BAU": "blue",
+            "Moderate": "orange",
+            "Aggressive": "green"
+        },
+
+        title=f"{selected_country} CO₂ Emission Scenarios"
+
+    )
+
+    fig.update_layout(
+
+        xaxis_title="Year",
+
+        yaxis_title="Projected CO₂ Emissions (MtCO₂)"
+
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+
+    # ---------------------------------------
+    # Projection Table
+    # ---------------------------------------
+
+    st.subheader("Scenario Projection Data")
+
+    st.dataframe(
+        country_projection,
+        use_container_width=True
+    )
+
+    # ---------------------------------------
+    # Cumulative Emissions Chart
+    # ---------------------------------------
+
+    st.subheader("Cumulative CO₂ Emissions (2025–2040)")
+
+    fig2 = px.bar(
+
+        country_summary,
+
+        x="Scenario",
+
+        y="Cumulative_CO2",
+
+        color="Scenario",
+
+        color_discrete_map={
+            "BAU": "blue",
+            "Moderate": "orange",
+            "Aggressive": "green"
+        },
+
+        title=f"{selected_country} Cumulative Emissions"
+
+    )
+
+    fig2.update_layout(
+
+        xaxis_title="Scenario",
+
+        yaxis_title="Cumulative CO₂ Emissions"
+
+    )
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
+
+    st.dataframe(
+        country_summary,
+        use_container_width=True
+    )
+
+    # ---------------------------------------
+    # Global Scenario Comparison
+    # ---------------------------------------
+
+    st.subheader("Global Scenario Comparison")
+
+    global_projection = (
+
+        scenario_projection
+
+        .groupby(
+            ["Year", "Scenario"]
+        )["CO2_Projected"]
+
+        .sum()
+
+        .reset_index()
+
+    )
+
+    fig3 = px.line(
+
+        global_projection,
+
+        x="Year",
+
+        y="CO2_Projected",
+
+        color="Scenario",
+
+        markers=True,
+
+        color_discrete_map={
+            "BAU": "blue",
+            "Moderate": "orange",
+            "Aggressive": "green"
+        },
+
+        title="Global CO₂ Projection Under Different Scenarios"
+
+    )
+
+    fig3.update_layout(
+
+        xaxis_title="Year",
+
+        yaxis_title="Total Projected CO₂ Emissions"
+
+    )
+
+    st.plotly_chart(
+        fig3,
+        use_container_width=True
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+# ===============================
 # MODEL COMPARISON PAGE
 # ===============================
 
