@@ -2,11 +2,12 @@
 
 ## 📌 Project Overview
 
-This project analyzes historical greenhouse gas emission trends and develops forecasting models to predict future CO₂ emissions.
+This project analyzes historical greenhouse gas emission trends and develops machine learning and time-series forecasting models to predict future CO₂ emissions across selected countries.
 
-The workflow covers the complete data science pipeline including data preprocessing, exploratory data analysis, feature engineering, machine learning regression models, and time-series forecasting.
+The workflow covers an end-to-end data science pipeline including data preprocessing, exploratory data analysis, feature engineering, machine learning regression, ETS time-series forecasting, model evaluation, uncertainty estimation, scenario analysis, and interactive visualization.
 
-The final objective is to compare different forecasting techniques and understand long-term emission trends across selected countries.
+The project compares multiple forecasting approaches and explores possible future emission pathways under different mitigation scenarios. An interactive Streamlit dashboard integrates historical trends, country-level analysis, model comparisons, long-term forecasts, prediction intervals, and scenario projections.
+
 
 
 ---
@@ -280,6 +281,7 @@ GHG-Emission-Analysis
 ├── WEEK_5_Scenario_Analysis
 |
 ├── app.py
+├── constants.py
 ├── requirements.txt
 │
 └── README.md
@@ -289,4 +291,20 @@ GHG-Emission-Analysis
 
 
 ---
+
+---
+
+# 📌 Conclusion
+
+This project presents an end-to-end framework for analyzing and forecasting country-level CO₂ emissions using exploratory data analysis, feature engineering, machine learning, time-series forecasting, uncertainty estimation, and scenario modelling.
+
+Historical emission data was transformed into predictive features including lag variables, rolling averages, per-capita emissions, year-over-year changes, and greenhouse gas intensity. Multiple forecasting approaches — Naive Baseline, Linear Regression, Random Forest Regression, and ETS(A,Ad,N) — were evaluated country-wise using MAE and RMSE.
+
+The pooled Random Forest model incorporates encoded country identity alongside numerical predictors, allowing it to account for differences in emission patterns across countries. The ETS model was evaluated on historical holdout data and subsequently refitted using available pre-forecast observations to generate long-term CO₂ forecasts for 2024–2043. Approximate 95% prediction intervals were included to represent increasing uncertainty across the forecast horizon.
+
+Scenario analysis further evaluates possible emission pathways from 2025–2040 under Business As Usual, Moderate Mitigation (-2% annually), and Aggressive Mitigation (-5% annually), illustrating how sustained mitigation efforts can influence future and cumulative emissions.
+
+Finally, the Streamlit dashboard integrates historical analysis, country profiles, forecasts with uncertainty intervals, scenario comparisons, and model-performance results into a single interactive interface.
+
+Overall, the project demonstrates how data analysis, machine learning, time-series forecasting, uncertainty estimation, and scenario modelling can be combined to provide a clearer understanding of historical CO₂ trends and possible future emission pathways.
 

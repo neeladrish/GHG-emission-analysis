@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 
 # ===============================
@@ -403,29 +404,34 @@ elif page == "Country Profile":
         .describe()
     ) 
 
-    # ===============================
+# ===============================
 # FORECAST PAGE
 # ===============================
 
 elif page == "Forecast":
 
-
     st.title(
         "🔮 ETS(A,Ad,N) CO₂ Emission Forecast"
     )
-
 
     st.markdown(
         """
         This section displays future CO₂ emission forecasts
         generated using the ETS(A,Ad,N) time-series model.
 
-        Forecast period:
+        The final forecasting model uses the available historical
+        observations before generating future emission projections.
 
-        2024 → 2043
+        **Forecast period: 2024 → 2043**
+
+        The shaded region represents the approximate **95% prediction
+        interval**, illustrating uncertainty around future CO₂ estimates.
         """
     )
 
+    # -----------------------------------
+    # COUNTRY SELECTOR
+    # -----------------------------------
 
     selected_country = st.selectbox(
         "Select Country",
@@ -434,71 +440,194 @@ elif page == "Forecast":
         )
     )
 
+    # -----------------------------------
+    # FORECAST DATA
+    # -----------------------------------
 
     country_forecast = (
         ets_forecast[
             ets_forecast["Country"]
-            ==
-            selected_country
+            == selected_country
         ]
-        .sort_values(
-            "Year"
+        .sort_values("Year")
+    )
+
+    # -----------------------------------
+    # HISTORICAL DATA
+    # -----------------------------------
+
+    historical_data = (
+        ghg_data[
+            ghg_data["country"]
+            == selected_country
+        ]
+        .sort_values("year")
+    )
+
+    # -----------------------------------
+    # INTERACTIVE FORECAST CHART
+    # -----------------------------------
+
+    fig = go.Figure()
+
+    # Historical emissions
+    fig.add_trace(
+        go.Scatter(
+            x=historical_data["year"],
+            y=historical_data["co2"],
+            mode="lines",
+            name="Historical Actual"
         )
     )
 
-
-    # -------------------------------
-    # FORECAST CHART
-    # -------------------------------
-
-
-    fig = px.line(
-
-        country_forecast,
-
-        x="Year",
-
-        y="Forecast_CO2",
-
-        markers=True,
-
-        title=f"{selected_country} ETS CO₂ Forecast (2024-2043)"
-
+    # Lower 95% interval boundary
+    fig.add_trace(
+        go.Scatter(
+            x=country_forecast["Year"],
+            y=country_forecast["Lower_95"],
+            mode="lines",
+            line=dict(width=0),
+            showlegend=False,
+            hoverinfo="skip"
+        )
     )
 
+    # Upper 95% interval boundary
+    # fill="tonexty" shades the area
+    # between Upper_95 and Lower_95
+    fig.add_trace(
+        go.Scatter(
+            x=country_forecast["Year"],
+            y=country_forecast["Upper_95"],
+            mode="lines",
+            line=dict(width=0),
+            fill="tonexty",
+            name="95% Prediction Interval",
+            hoverinfo="skip"
+        )
+    )
+
+    # ETS forecast
+    fig.add_trace(
+        go.Scatter(
+            x=country_forecast["Year"],
+            y=country_forecast["Forecast_CO2"],
+            mode="lines+markers",
+            name="ETS Forecast"
+        )
+    )
+
+    # Forecast start marker
+    fig.add_vline(
+        x=2024,
+        line_dash="dash",
+        annotation_text="Forecast Start",
+        annotation_position="top"
+    )
 
     fig.update_layout(
 
+        title=(
+            f"{selected_country} ETS(A,Ad,N) "
+            "CO₂ Forecast (2024–2043)"
+        ),
+
         xaxis_title="Year",
 
-        yaxis_title="Forecast CO₂ Emissions (MtCO₂)"
+        yaxis_title="CO₂ Emissions (MtCO₂)",
 
+        hovermode="x unified",
+
+        legend_title="Series"
     )
-
 
     st.plotly_chart(
-
         fig,
-
         use_container_width=True
-
     )
 
-
-
-    # -------------------------------
+    # -----------------------------------
     # FORECAST TABLE
-    # -------------------------------
-
+    # -----------------------------------
 
     st.subheader(
-        "Forecast Values"
+        "Forecast Values and 95% Prediction Interval"
     )
 
+    forecast_table = country_forecast[
+        [
+            "Year",
+            "Forecast_CO2",
+            "Lower_95",
+            "Upper_95"
+        ]
+    ].copy()
+
+    forecast_table.columns = [
+        "Year",
+        "Forecast CO₂",
+        "Lower 95%",
+        "Upper 95%"
+    ]
 
     st.dataframe(
-        country_forecast
+        forecast_table,
+        use_container_width=True
     )
+
+    # -----------------------------------
+    # FORECAST SUMMARY
+    # -----------------------------------
+
+    st.subheader(
+        "Forecast Summary"
+    )
+
+    first_forecast = country_forecast.iloc[0]
+
+    last_forecast = country_forecast.iloc[-1]
+
+    forecast_change = (
+        (
+            last_forecast["Forecast_CO2"]
+            -
+            first_forecast["Forecast_CO2"]
+        )
+        /
+        first_forecast["Forecast_CO2"]
+    ) * 100
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+
+        st.metric(
+            "2024 Forecast",
+            f"{first_forecast['Forecast_CO2']:,.2f} MtCO₂"
+        )
+
+    with col2:
+
+        st.metric(
+            "2043 Forecast",
+            f"{last_forecast['Forecast_CO2']:,.2f} MtCO₂"
+        )
+
+    with col3:
+
+        st.metric(
+            "2024–2043 Change",
+            f"{forecast_change:+.2f}%"
+        )
+
+    st.caption(
+        """
+        The prediction interval represents uncertainty around the
+        ETS forecast. The interval generally widens further into the
+        forecast horizon as uncertainty increases.
+        """
+    )
+
 
 
 # ===============================
